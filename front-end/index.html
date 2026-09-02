@@ -1,14 +1,21 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>GeoGame</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <input type="text" id="entrada-estado">
     <input type="button" id="btn-teste">
 
+    <svg width="200" height="200" viewBox="0 0 200 200" style="background-color: f0f0f0;">
+        <!--Estado 1: São Paulo-->
+        <path id="sp" class="estado" d="M 20 20 L 90 20 L 90 90 L 20 90 Z" fill="#ccc" stroke="333"/>
+        <!--Estado 2: Rio de Janeiro-->
+        <path id="rj" class="estado" d="M 110 20 L 180 20 L 180 90 L 110 90 Z" fill="#ccc" stroke="333"/>
+    </svg>
     <p id="mensagem"></p>
     
     <script src="script.js"></script>
