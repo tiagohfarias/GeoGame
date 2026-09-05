@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <input type="text" id="entrada-estado" placeholder="Digite o nome do estado">
+    <input type="text" id="entrada-estado" placeholder="Digite o nome do estado" disabled>
     <button id="button">Enviar</button>
 
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -521,7 +521,11 @@
             </g>
         </g>
     </svg>
-    
+    <!--Cronômetro e Controles do jogo-->
+    <div class="painelControle">
+        <button id="btnIniciar">Iniciar Jogo</button>
+        <span id="cronometro">00:00</span>
+    </div>
     <p id="mensagem"></p>
     
     <script src="script.js"></script>

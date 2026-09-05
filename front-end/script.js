@@ -41,6 +41,13 @@ let acertos = 0;
 const entradaEstado = document.getElementById('entrada-estado');
 const btn = document.getElementById('button');
 const mensagem = document.getElementById('mensagem');
+const cronometro = document.getElementById('cronometro');
+const btnIniciar = document.getElementById('btnIniciar');
+const displayCronometro = document.getElementById('cronometro');
+
+//variáveis de controle de tempo
+let tempoSegundos = 0;
+let intervaloTempo = null;
 
 //3. FUNÇÃO AUXILIAR 
 function tratarTexto(texto) {
@@ -52,8 +59,57 @@ function tratarTexto(texto) {
     .replace(/\s+/g, ' '); // Remove espaços extras
 }
 
+// Função para converter segundos puros em min:seg -> 75 seg em 1:15
+function formatarTempo(segundos) {
+    const minutos = Math.floor(segundos / 60);
+    const segundosRestantes = segundos % 60;
+
+    //pagStart (2, '0') garante que sempre terá 2 dígitos, adicionando 0 à esquerda se necessário
+    const minFormatado = String(minutos).padStart(2, '0');
+    const segFormatado = String(segundosRestantes).padStart(2, '0');
+    return `${minFormatado}:${segFormatado}`;
+}
+
+//Função para iniciar o cronômetro
+function iniciarCronometro() {
+    tempoSegundos = 0;
+    displayCronometro.textContent = "00:00";
+    clearInterval(intervaloTempo); // Limpa qualquer intervalo existente
+
+    //Inicia o intervalo de tempo
+    intervaloTempo = setInterval(function() {
+        tempoSegundos++;
+        console.log('Tempo em segundos:', tempoSegundos);
+        displayCronometro.textContent = formatarTempo(tempoSegundos);
+    }, 1000); // Atualiza a cada segundo(1000ms)
+}
+
+
+
 //4. EVENTO DE CLIQUE
 // Código que roda quando clica no botão
+// Libera o campo de texto e coloca o cursor nele, além de iniciar o cronômetro
+btnIniciar.addEventListener('click',function() {
+    entradaEstado.disabled = false;
+    entradaEstado.focus();
+    entradaEstado.value = '';
+
+    //Reseta o placar e lista de acertos
+    acertos = 0;
+    estadosDescobertos.length = 0; // Limpa a lista de estados descobertos
+    mensagem.textContent = 'Jogo iniciado! Boa sorte!';
+
+    //Remove a cor verde de todos os estados
+    const estadosPintados = document.querySelectorAll('.descoberto');
+    estadosPintados.forEach(function(estado) {
+        estado.classList.remove('descoberto');
+    });
+
+    //Inicia o cronômetro
+    iniciarCronometro();
+    btnIniciar.textContent = 'Reiniciar Jogo'; //Muda o texto do botão para reiniciar
+});
+    
 btn.addEventListener('click', function() {
     console.log('Botão clicado');
     console.log('Valor do input:', entradaEstado.value);
@@ -72,7 +128,9 @@ btn.addEventListener('click', function() {
         estadosDescobertos.push(idEstado);
         acertos++; 
 
-        mensagem.textContent = `Parabéns! ${acertos} / ${Object.keys(mapaEstados).length} estados descobertos.`;
+        const totalEstados = Object.keys(mapaEstados).length;
+
+        mensagem.textContent = `Parabéns! ${acertos} / ${totalEstados} estados descobertos.`;
         entradaEstado.value = ''; // Limpa o campo de entrada
     
     } else if (estadosDescobertos.includes(idEstado)) {
@@ -90,3 +148,18 @@ btn.addEventListener('click', function() {
             btn.click(); //Simula o clique no botão com a tecla Enter
         }
 });
+
+// Checagem de fim de jogo
+if (acertos === totalEstados) {
+    // Para de contar o tempo
+    clearInterval(intervaloTempo);
+    
+    //Bloqueia a entrada de texto
+    entradaEstado.disabled = true;
+
+    //Exibe mensagem de vitória com o tempo final
+    mensagem.textContent = `Parabéns! Você descobriu todos os estados em ${formatarTempo(tempoSegundos)}!`;
+} else {
+    //Mensagem padrão durante o jogo
+    mensagem.textContent = `${acertos} / ${totalEstados} estados descobertos.`;
+}
