@@ -6,6 +6,9 @@ const mapaEstados = {
     // Adicione outros estados conforme necessário
 }
 
+const estadosDescobertos = [];
+let acertos = 0;
+
 //2.ELEMENTOS DOM
 // Selecionando os elementos DOM
 const entradaEstado = document.getElementById('entrada-estado');
@@ -32,10 +35,15 @@ btn.addEventListener('click', function() {
     //busca Id no mapeamento de estados
     const idEstado = mapaEstados[textoLimpo];
 
-    // Verifica se o estado é válido
-    if(idEstado) {
+    // Verifica se o estado é válido e se ja foi descoberto.
+    if(idEstado && !estadosDescobertos.includes(idEstado)) {
+        //pinta o estado no mapa
         const elementoSvg = document.getElementById(idEstado);
         elementoSvg.classList.add('descoberto');
+        
+        //adiciona o estado à lista de descobertos
+        estadosDescobertos.push(idEstado);
+        acertos++; 
 
         mensagem.textContent = 'Parabéns! Você acertou o estado!';
         entradaEstado.value = ''; // Limpa o campo de entrada
